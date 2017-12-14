@@ -1,10 +1,12 @@
 import gym
-from baselines import deepq
+# from baselines import deepq
+from baselines.deepq.__init__ import wrap_atari_dqn
 
 
 def main():
     env = gym.make("PongNoFrameskip-v4")
-    env = deepq.wrap_atari_dqn(env)
+#     env = deepq.wrap_atari_dqn(env)
+    env = wrap_atari_dqn(env)
     act = deepq.load("pong_model.pkl")
 
     while True:
