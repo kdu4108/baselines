@@ -33,3 +33,8 @@ To cite this repository in publications:
       journal = {GitHub repository},
       howpublished = {\url{https://github.com/openai/baselines}},
     }
+#Helpful Links
+https://github.com/openai/baselines/issues/4#issuecomment-305961399
+
+
+
