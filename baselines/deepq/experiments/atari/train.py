@@ -63,7 +63,7 @@ def parse_args():
 def make_env(game_name):
     env = gym.make(game_name + "NoFrameskip-v4")
     monitored_env = bench.Monitor(env, logger.get_dir())  # puts rewards and number of steps in info, before environment is wrapped
-    env = wrap_deepmind(monitored_env)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+    env = wrap_deepmind(monitored_env, frame_stack=True, scale=True)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
     return env, monitored_env
 
 
