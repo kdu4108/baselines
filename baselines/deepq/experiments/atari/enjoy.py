@@ -12,7 +12,7 @@ from baselines.common.misc_util import (
     boolean_flag,
 )
 from baselines import bench
-from baselines.common.atari_wrappers import wrap_
+from baselines.common.atari_wrappers import wrap_deepmind
 
 from baselines.deepq.experiments.atari.model import model, dueling_model
 
