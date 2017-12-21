@@ -36,5 +36,6 @@ To cite this repository in publications:
 #Helpful Links
 https://github.com/openai/baselines/issues/4#issuecomment-305961399
 https://stackoverflow.com/questions/44865253/libcublas-so-8-0-error-with-tensorflow
-
+https://github.com/openai/gym/issues/637 (ssh visual forwarding)
+https://github.com/openai/gym/issues/366 (ssh visual forwarding)
 
