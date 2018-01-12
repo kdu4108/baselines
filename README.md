@@ -34,5 +34,11 @@ To cite this repository in publications:
       howpublished = {\url{https://github.com/openai/baselines}},
     }
 
+# Running the demo
+```bash
+python3 -m baselines.deepq.experiments.atari.enjoy --video out.mp4 --model-dir /Users/joon/xai/baselines/models/model-atari-prior-duel-breakout-1 --env Breakout --dueling
+```
+
 # Syncing with fork
  - https://help.github.com/articles/syncing-a-fork/
+
