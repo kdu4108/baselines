@@ -37,7 +37,7 @@ def make_env(game_name):
     #else:
     env = gym.make(game_name + "NoFrameskip-v4")
     env = bench.Monitor(env, None)
-    env = wrap_dqn(env)
+    env = wrap_dqn(env, clip = False)
     return env
 
 
@@ -103,6 +103,7 @@ def play(game_name, env, act, stochastic, video_path):
             if action > 3:
                 action -= 2
         obs, rew, done, info = env.step(action)
+        print("rew :", rew)
         #time.sleep(0.1)
         
         #print(info)
