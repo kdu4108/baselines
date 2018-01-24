@@ -30,7 +30,8 @@ class ActWrapper(object):
     def load(path):
         with open(path, "rb") as f:
             model_data, act_params = cloudpickle.load(f)
-        act = deepq.build_act(**act_params)
+       # act = deepq.build_act(**act_params)
+        act = baselines.deepq.build_graph.build_act(**act_params)
         sess = tf.Session()
         sess.__enter__()
         with tempfile.TemporaryDirectory() as td:

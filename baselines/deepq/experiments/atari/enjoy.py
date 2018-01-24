@@ -33,9 +33,9 @@ def make_env(game_name):
     env = bench.Monitor(env, None)
 #<<<<<<< HEAD
     env = SimpleMonitor(env)
-    env = wrap_dqn(env)
+#    env = wrap_dqn(env)
 #=======
-#    env = deepq.wrap_atari_dqn(env)
+    env = deepq.wrap_atari_dqn(env)
 #>>>>>>> bugfix/190-fix-wrapdqn-reference
     return env
 
