@@ -7,10 +7,12 @@ import cloudpickle
 import numpy as np
 
 import gym
+import baselines
 import baselines.common.tf_util as U
 from baselines import logger
 from baselines.common.schedules import LinearSchedule
-from baselines import deepq
+from baselines.deepq.build_graph import build_act, build_train
+#from baselines import deepq
 from baselines.deepq.replay_buffer import ReplayBuffer, PrioritizedReplayBuffer
 
 
@@ -173,7 +175,7 @@ def learn(env,
     def make_obs_ph(name):
         return U.BatchInput(observation_space_shape, name=name)
 
-    act, train, update_target, debug = deepq.build_train(
+    act, train, update_target, debug = baselines.deepq.build_graph.build_train(
         make_obs_ph=make_obs_ph,
         q_func=q_func,
         num_actions=env.action_space.n,
