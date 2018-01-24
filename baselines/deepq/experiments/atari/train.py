@@ -65,9 +65,9 @@ def make_env(game_name):
     monitored_env = bench.Monitor(env, logger.get_dir())  # puts rewards and number of steps in info, before environment is wrapped
 #<<<<<<< HEAD
     monitored_env = SimpleMonitor(monitored_env)
-    env = wrap_dqn(monitored_env)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+#    env = wrap_dqn(monitored_env)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
 #=======
-#    env = deepq.wrap_atari_dqn(monitored_env)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+    env = deepq.wrap_atari_dqn(monitored_env)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
 #>>>>>>> bugfix/190-fix-wrapdqn-reference
     return env, monitored_env
 
