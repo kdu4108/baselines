@@ -11,8 +11,13 @@ import baselines
 import baselines.common.tf_util as U
 from baselines import logger
 from baselines.common.schedules import LinearSchedule
+#<<<<<<< HEAD
 from baselines.deepq.build_graph import build_act, build_train
 #from baselines import deepq
+#=======
+#from baselines import deepq
+#from baselines.deepq.build_graph import build_act, build_train
+#>>>>>>> bugfix/190-fix-wrapdqn-reference
 from baselines.deepq.replay_buffer import ReplayBuffer, PrioritizedReplayBuffer
 
 
