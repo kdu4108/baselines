@@ -14,7 +14,7 @@ from baselines.common.misc_util import (
 )
 from baselines import bench
 from baselines.common.atari_wrappers import wrap_deepmind
-
+from baselines.common.atari_wrappers_deprecated import wrap_dqn
 from baselines.deepq.experiments.atari.model import model, dueling_model
 
 import matplotlib.pyplot as plt

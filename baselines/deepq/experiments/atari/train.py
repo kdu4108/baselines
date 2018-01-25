@@ -23,6 +23,7 @@ from baselines.common.misc_util import (
 from baselines.common.schedules import LinearSchedule, PiecewiseSchedule
 from baselines import bench
 from baselines.common.atari_wrappers import wrap_deepmind
+from baselines.common.atari_wrappers_deprecated import wrap_dqn
 from baselines.common.azure_utils import Container
 from .model import model, dueling_model
 
