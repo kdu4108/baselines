@@ -33,9 +33,21 @@ To cite this repository in publications:
       journal = {GitHub repository},
       howpublished = {\url{https://github.com/openai/baselines}},
     }
+
 #Helpful Links
 https://github.com/openai/baselines/issues/4#issuecomment-305961399
 https://stackoverflow.com/questions/44865253/libcublas-so-8-0-error-with-tensorflow
 https://github.com/openai/gym/issues/637 (ssh visual forwarding)
 https://github.com/openai/gym/issues/366 (ssh visual forwarding)
 
+
+# Running the demo
+```bash
+python3 -m baselines.deepq.experiments.atari.enjoy --video out.mp4 --model-dir /Users/joon/xai/baselines/models/model-atari-prior-duel-breakout-1 --env Breakout --dueling
+```
+
+# Syncing with fork
+ - https://help.github.com/articles/syncing-a-fork/
+
+# Dropbox Link
+ - https://www.dropbox.com/sh/sjt1e5dm7n72r5y/AADCb1O6Zo0iJQoQlvOiWg39a?dl=0

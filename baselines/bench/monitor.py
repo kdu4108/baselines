@@ -68,6 +68,8 @@ class Monitor(Wrapper):
             self.episode_rewards.append(eprew)
             self.episode_lengths.append(eplen)
             info['episode'] = epinfo
+        info['steps'] = self.total_steps
+        info['rewards'] = self.rewards
         self.total_steps += 1
         return (ob, rew, done, info)
 

@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--num-timesteps', type=int, default=int(10e6))
     args = parser.parse_args()
     logger.configure()
-    train(args.env, num_timesteps=args.num_timesteps, seed=args.seed, num_cpu=32)
+    train(args.env, num_timesteps=args.num_timesteps, seed=args.seed, num_cpu=12)
 
 
 if __name__ == '__main__':
