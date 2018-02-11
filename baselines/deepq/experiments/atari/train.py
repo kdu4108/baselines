@@ -59,13 +59,16 @@ def parse_args():
                         help="It present data will saved/loaded from Azure. Should be in format ACCOUNT_NAME:ACCOUNT_KEY:CONTAINER")
     parser.add_argument("--save-freq", type=int, default=1e6, help="save model once every time this many iterations are completed")
     boolean_flag(parser, "load-on-start", default=True, help="if true and model was previously saved then training will be resumed")
+    # Clipping the reward (by Jun Ki Lee)
+    boolean_flag(parser, "clip-reward", default=False, help="whether or not to clip the reward by its sign")
     return parser.parse_args()
 
 
-def make_env(game_name):
+# def make_env(game_name):
+def make_env(game_name, clip_reward = False):
     env = gym.make(game_name + "NoFrameskip-v4")
     monitored_env = SimpleMonitor(env)  # puts rewards and number of steps in info, before environment is wrapped
-    env = wrap_dqn(monitored_env)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+    env = wrap_dqn(monitored_env, clip = clip_reward)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
     return env, monitored_env
 
 
@@ -127,7 +130,7 @@ if __name__ == '__main__':
     else:
         container = None
     # Create and seed the env.
-    env, monitored_env = make_env(args.env)
+    env, monitored_env = make_env(args.env, args.clip_reward)
     if args.seed > 0:
         set_global_seeds(args.seed)
         env.unwrapped.seed(args.seed)
