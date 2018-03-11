@@ -24,6 +24,8 @@ def parse_args():
     parser.add_argument("--video", type=str, default=None, help="Path to mp4 file where the video of first episode will be recorded.")
     boolean_flag(parser, "stochastic", default=True, help="whether or not to use stochastic actions according to models eps value")
     boolean_flag(parser, "dueling", default=False, help="whether or not to use dueling model")
+    boolean_flag(parser, "clipped", default=False, help="whether you want to record results in a clipped environment")
+
 
     return parser.parse_args()
 
@@ -35,17 +37,23 @@ def make_env(game_name):
     return env
 
 
-def play(env, act, stochastic, video_path):
+def play(env, act, stochastic, video_path, clipped, num_trials = 10):
     num_episodes = 0
     video_recorder = None
     video_recorder = VideoRecorder(
         env, video_path, enabled=video_path is not None)
     obs = env.reset()
-    while True:
+    reward = 0
+    num_played = 0
+    rewardArray = []
+    while num_played < num_trials:
         env.unwrapped.render()
         video_recorder.capture_frame()
         action = act(np.array(obs)[None], stochastic=stochastic)[0]
         obs, rew, done, info = env.step(action)
+        if clipped:
+            rew = clip_score(rew)
+        reward += rew
         if done:
             obs = env.reset()
         if len(info["rewards"]) > num_episodes:
@@ -55,8 +63,18 @@ def play(env, act, stochastic, video_path):
                 video_recorder.close()
                 video_recorder.enabled = False
             print(info["rewards"][-1])
+            rewardArray.append(reward)
+            reward = 0
+            num_played += 1
             num_episodes = len(info["rewards"])
+    return {"Nonclipped": info["rewards"], "Clipped": rewardArray}
 
+def clip_score(reward):
+    if reward > 0:
+        return 1
+    elif reward < 0:
+        return (-1)
+    return 0
 
 if __name__ == '__main__':
     with U.make_session(4) as sess:
@@ -67,4 +85,10 @@ if __name__ == '__main__':
             q_func=dueling_model if args.dueling else model,
             num_actions=env.action_space.n)
         U.load_state(os.path.join(args.model_dir, "saved"))
-        play(env, act, args.stochastic, args.video)
+        trial_rewards = play(env, act, args.stochastic, args.video, args.clipped)
+
+        with open("results.txt", "a") as text_file:
+            # text_file.write("Clipped Agent: " + str(trial_rewards) + "\n")        
+            text_file.write("NonClipped Agent: " + str(trial_rewards) + "\n")        
+
+

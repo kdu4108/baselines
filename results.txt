@@ -1,0 +1,14 @@
+python -m baselines.deepq.experiments.atari.enjoy --model-dir ~/amidarClippedDuelingPrioritized/model-49565917/ --env Amidar --dueling --clipped
+
+Clipped Agent: {'Nonclipped': [1752.0, 1949.0, 1987.0, 1312.0, 1943.0, 1850.0, 1938.0, 1636.0, 1994.0, 2083.0], 'Clipped': [181, 186, 187, 106, 185, 181, 182, 159, 184, 189]}
+
+python -m baselines.deepq.experiments.atari.enjoy --model-dir ~/AmidarNonClippedDuelingPrioritized/model-49457737/ --env Amidar --dueling --clipped
+
+NonClipped Agent: {'Clipped': [86, 84, 86, 84, 84, 88, 88, 86, 88, 86], 'Nonclipped': [907.0, 912.0, 961.0, 955.0, 905.0, 963.0, 918.0, 915.0, 917.0, 958.0]}
+
+python -m baselines.deepq.experiments.atari.enjoy --model-dir ~/amidarClippedDuelingPrioritized/model-49565917/ --env Amidar --dueling
+
+Clipped Agent: {'Clipped': [187.0, 186.0, 185.0, 190.0, 183.0, 177.0, 181.0, 189.0, 187.0, 184.0], 'Nonclipped': [1945.0, 1902.0, 1948.0, 1990.0, 1898.0, 1786.0, 1899.0, 1950.0, 1897.0, 1801.0]}
+
+
+NonClipped Agent: {'Clipped': [83.0, 86.0, 85.0, 86.0, 87.0, 88.0, 87.0, 87.0, 85.0, 86.0], 'Nonclipped': [903.0, 914.0, 908.0, 958.0, 912.0, 918.0, 963.0, 911.0, 910.0, 915.0]}
