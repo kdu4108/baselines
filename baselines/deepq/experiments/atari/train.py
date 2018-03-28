@@ -61,14 +61,16 @@ def parse_args():
     boolean_flag(parser, "load-on-start", default=True, help="if true and model was previously saved then training will be resumed")
     # Clipping the reward (by Jun Ki Lee)
     boolean_flag(parser, "clip-reward", default=False, help="whether or not to clip the reward by its sign")
+    # Additive shift to reward (by Kevin Du)
+    parser.add_argument("--add-shift", type=int, default=int(0), help="amount by which to shift the reward")
     return parser.parse_args()
 
 
 # def make_env(game_name):
-def make_env(game_name, clip_reward = False):
+def make_env(game_name, clip_reward = False, add_shift = 0):
     env = gym.make(game_name + "NoFrameskip-v4")
     monitored_env = SimpleMonitor(env)  # puts rewards and number of steps in info, before environment is wrapped
-    env = wrap_dqn(monitored_env, clip = clip_reward)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+    env = wrap_dqn(monitored_env, clip = clip_reward, shift = add_shift)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
     return env, monitored_env
 
 
@@ -130,7 +132,7 @@ if __name__ == '__main__':
     else:
         container = None
     # Create and seed the env.
-    env, monitored_env = make_env(args.env, args.clip_reward)
+    env, monitored_env = make_env(args.env, args.clip_reward, args.add_shift)
     if args.seed > 0:
         set_global_seeds(args.seed)
         env.unwrapped.seed(args.seed)
@@ -216,6 +218,7 @@ if __name__ == '__main__':
             action = act(np.array(obs)[None], update_eps=update_eps, **kwargs)[0]
             reset = False
             new_obs, rew, done, info = env.step(action)
+            # if rew != 0: print(rew)
             replay_buffer.add(obs, action, rew, new_obs, float(done))
             obs = new_obs
             if done:
@@ -259,6 +262,7 @@ if __name__ == '__main__':
                 break
 
             if done:
+                # print(info)
                 steps_left = args.num_steps - info["steps"]
                 completion = np.round(info["steps"] / args.num_steps, 1)
 
