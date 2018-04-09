@@ -32,8 +32,8 @@ from .model import model, dueling_model
 def parse_args():
     parser = argparse.ArgumentParser("DQN experiments for Atari games")
     # Environment
-    parser.add_argument("--env", type=str, default="Pong", help="name of the game")
-    parser.add_argument("--seed", type=int, default=42, help="which seed to use")
+    parser.add_argument("--env", type=str, default="Amidar", help="name of the game")
+    parser.add_argument("--seed", type=int, default=1586, help="which seed to use")
     # Core DQN parameters
     parser.add_argument("--replay-buffer-size", type=int, default=int(1e6), help="replay buffer size")
     parser.add_argument("--lr", type=float, default=1e-4, help="learning rate for Adam optimizer")
@@ -50,6 +50,7 @@ def parse_args():
     boolean_flag(parser, "param-noise", default=False, help="whether or not to use parameter space noise for exploration")
     boolean_flag(parser, "layer-norm", default=False, help="whether or not to use layer norm (should be True if param_noise is used)")
     boolean_flag(parser, "gym-monitor", default=False, help="whether or not to use a OpenAI Gym monitor (results in slower training due to video recording)")
+    boolean_flag(parser, "random-start", default=False, help="whether or not to add random action choices in the beginning of an agent's trial)")
     parser.add_argument("--prioritized-alpha", type=float, default=0.6, help="alpha parameter for prioritized replay buffer")
     parser.add_argument("--prioritized-beta0", type=float, default=0.4, help="initial value of beta parameters for prioritized replay")
     parser.add_argument("--prioritized-eps", type=float, default=1e-6, help="eps parameter for prioritized replay buffer")
@@ -191,6 +192,7 @@ if __name__ == '__main__':
         reset = True
 
         # Main trianing loop
+        n_of_random_actions = np.random.randint(61, 80)
         while True:
             num_iters += 1
             num_iters_since_reset += 1
@@ -215,18 +217,25 @@ if __name__ == '__main__':
                 kwargs['update_param_noise_threshold'] = update_param_noise_threshold
                 kwargs['update_param_noise_scale'] = (num_iters % args.param_noise_update_freq == 0)
 
-            action = act(np.array(obs)[None], update_eps=update_eps, **kwargs)[0]
+            if num_iters_since_reset < n_of_random_actions and args.random_start:
+                action = np.random.randint(0, env.action_space.n)
+            else:
+                action = act(np.array(obs)[None], update_eps=update_eps, **kwargs)[0]
+
             reset = False
             new_obs, rew, done, info = env.step(action)
             # if rew != 0: print(rew)
-            replay_buffer.add(obs, action, rew, new_obs, float(done))
+            if not(num_iters_since_reset < n_of_random_actions and args.random_start):
+                replay_buffer.add(obs, action, rew, new_obs, float(done))
             obs = new_obs
             if done:
                 num_iters_since_reset = 0
+                info["n_of_random_actions"] = n_of_random_actions
+                n_of_random_actions = np.random.randint(61, 80)
                 obs = env.reset()
                 reset = True
 
-            if (num_iters > max(5 * args.batch_size, args.replay_buffer_size // 20) and
+            if (num_iters > max(6 * args.batch_size, args.replay_buffer_size // 20) and
                     num_iters % args.learning_freq == 0):
                 # Sample a bunch of transitions from replay buffer
                 if args.prioritized:
@@ -268,8 +277,8 @@ if __name__ == '__main__':
 
                 logger.record_tabular("% completion", completion)
                 logger.record_tabular("steps", info["steps"])
-                logger.record_tabular("iters", num_iters)
-                logger.record_tabular("episodes", len(info["rewards"]))
+                logger.record_tabular("number of random actions", info["n_of_random_actions"])
+/bin/bash: j: command not found
                 logger.record_tabular("reward (100 epi mean)", np.mean(info["rewards"][-100:]))
                 logger.record_tabular("exploration", exploration.value(num_iters))
                 if args.prioritized:
