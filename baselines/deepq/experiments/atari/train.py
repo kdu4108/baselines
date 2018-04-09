@@ -278,7 +278,6 @@ if __name__ == '__main__':
                 logger.record_tabular("% completion", completion)
                 logger.record_tabular("steps", info["steps"])
                 logger.record_tabular("number of random actions", info["n_of_random_actions"])
-/bin/bash: j: command not found
                 logger.record_tabular("reward (100 epi mean)", np.mean(info["rewards"][-100:]))
                 logger.record_tabular("exploration", exploration.value(num_iters))
                 if args.prioritized:
