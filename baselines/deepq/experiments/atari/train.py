@@ -64,14 +64,16 @@ def parse_args():
     boolean_flag(parser, "clip-reward", default=False, help="whether or not to clip the reward by its sign")
     # Additive shift to reward (by Kevin Du)
     parser.add_argument("--add-shift", type=int, default=int(0), help="amount by which to shift the reward")
+    # Scaling reward (by Kevin Du)
+    parser.add_argument("--scale-by", type=int, default=1.0, help="amount by which to scale the reward")
     return parser.parse_args()
 
 
 # def make_env(game_name):
-def make_env(game_name, clip_reward = False, add_shift = 0):
+def make_env(game_name, clip_reward = False, add_shift = 0, scale_by = 1.0):
     env = gym.make(game_name + "NoFrameskip-v4")
     monitored_env = SimpleMonitor(env)  # puts rewards and number of steps in info, before environment is wrapped
-    env = wrap_dqn(monitored_env, clip = clip_reward, shift = add_shift)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+    env = wrap_dqn(monitored_env, clip = clip_reward, shift = add_shift, scale = scale_by)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
     return env, monitored_env
 
 
@@ -116,7 +118,7 @@ def maybe_load_model(savedir, container):
 
 if __name__ == '__main__':
     args = parse_args()
-    
+
     # Parse savedir and azure container.
     savedir = args.save_dir
     if savedir is None:
@@ -133,7 +135,7 @@ if __name__ == '__main__':
     else:
         container = None
     # Create and seed the env.
-    env, monitored_env = make_env(args.env, args.clip_reward, args.add_shift)
+    env, monitored_env = make_env(args.env, args.clip_reward, args.add_shift, args.scale_by)
     if args.seed > 0:
         set_global_seeds(args.seed)
         env.unwrapped.seed(args.seed)

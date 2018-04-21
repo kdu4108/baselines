@@ -157,6 +157,15 @@ class AdditiveShiftRewardsWrapper(gym.RewardWrapper):
         """Shift all rewards by self.shift."""
         return (reward + self.shift)
 
+class ScaleRewardsWrapper(gym.RewardWrapper):
+    def __init__(self, env = None, scale = 1):
+        super(ScaleRewardsWrapper, self).__init__(env)
+        self.scale = scale
+
+    def _reward(self, reward):
+        """Scale all rewards by self.scale."""
+        return (reward * self.scale)
+
 
 class LazyFrames(object):
     def __init__(self, frames):
@@ -227,7 +236,7 @@ class ScaledFloatFrame(gym.ObservationWrapper):
 #     env = FrameStack(env, 4)
 #     env = ClippedRewardsWrapper(env)
 #     return env
-def wrap_dqn(env, clip = False, shift = 0):
+def wrap_dqn(env, clip = False, shift = 0, scale = 1):
     """Apply a common set of wrappers for Atari games."""
     assert 'NoFrameskip' in env.spec.id
     env = EpisodicLifeEnv(env)
@@ -240,6 +249,7 @@ def wrap_dqn(env, clip = False, shift = 0):
     if clip:
         env = ClippedRewardsWrapper(env)
     env = AdditiveShiftRewardsWrapper(env, shift)
+    env = ScaleRewardsWrapper(env, scale)
     return env
 
 
