@@ -65,7 +65,7 @@ def parse_args():
     # Additive shift to reward (by Kevin Du)
     parser.add_argument("--add-shift", type=int, default=int(0), help="amount by which to shift the reward")
     # Scaling reward (by Kevin Du)
-    parser.add_argument("--scale-by", type=int, default=1.0, help="amount by which to scale the reward")
+    parser.add_argument("--scale-by", type=float, default=1.0, help="amount by which to scale the reward")
     return parser.parse_args()
 
 
