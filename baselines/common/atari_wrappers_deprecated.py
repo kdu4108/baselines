@@ -148,6 +148,11 @@ class ClippedRewardsWrapper(gym.RewardWrapper):
         """Change all the positive rewards to 1, negative to -1 and keep zero."""
         return np.sign(reward)
 
+class LogRewardsWrapper(gym.RewardWrapper):
+    def _reward(self, reward):
+        """Change all the positive rewards to 1, negative to -1 and keep zero."""
+        return np.sign(reward)*np.log(1 + np.absolute(reward))
+
 class AdditiveShiftRewardsWrapper(gym.RewardWrapper):
     def __init__(self, env = None, shift = 0):
         super(AdditiveShiftRewardsWrapper, self).__init__(env)
@@ -236,7 +241,7 @@ class ScaledFloatFrame(gym.ObservationWrapper):
 #     env = FrameStack(env, 4)
 #     env = ClippedRewardsWrapper(env)
 #     return env
-def wrap_dqn(env, clip = False, shift = 0, scale = 1):
+def wrap_dqn(env, clip = False, shift = 0, scale = 1, log = False):
     """Apply a common set of wrappers for Atari games."""
     assert 'NoFrameskip' in env.spec.id
     env = EpisodicLifeEnv(env)
@@ -248,6 +253,8 @@ def wrap_dqn(env, clip = False, shift = 0, scale = 1):
     env = FrameStack(env, 4)
     if clip:
         env = ClippedRewardsWrapper(env)
+    if log:
+        env = LogRewardsWrapper(env)
     env = AdditiveShiftRewardsWrapper(env, shift)
     env = ScaleRewardsWrapper(env, scale)
     return env
