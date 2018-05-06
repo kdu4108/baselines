@@ -19,7 +19,7 @@ from baselines.deepq.experiments.atari.model import model, dueling_model
 def parse_args():
     parser = argparse.ArgumentParser("Run an already learned DQN model.")
     # Environment
-    parser.add_argument("--env", type=str, required=True, help="name of the game")
+    parser.add_argument("--env", default="Amidar", type=str, required=True, help="name of the game")
     parser.add_argument("--model-dir", type=str, default=None, help="load model from this directory. ")
     parser.add_argument("--video", type=str, default=None, help="Path to mp4 file where the video of first episode will be recorded.")
     boolean_flag(parser, "stochastic", default=True, help="whether or not to use stochastic actions according to models eps value")
@@ -86,9 +86,10 @@ if __name__ == '__main__':
             num_actions=env.action_space.n)
         U.load_state(os.path.join(args.model_dir, "saved"))
         trial_rewards = play(env, act, args.stochastic, args.video, args.clipped)
+        print(trial_rewards)
 
-        with open("results.txt", "a") as text_file:
-            # text_file.write("Clipped Agent: " + str(trial_rewards) + "\n")        
-            text_file.write("NonClipped Agent: " + str(trial_rewards) + "\n")        
+        # with open("results.txt", "a") as text_file:
+        #     # text_file.write("Clipped Agent: " + str(trial_rewards) + "\n")        
+        #     text_file.write("NonClipped Agent: " + str(trial_rewards) + "\n")        
 
 
