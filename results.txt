@@ -12,3 +12,27 @@ Clipped Agent: {'Clipped': [187.0, 186.0, 185.0, 190.0, 183.0, 177.0, 181.0, 189
 
 
 NonClipped Agent: {'Clipped': [83.0, 86.0, 85.0, 86.0, 87.0, 88.0, 87.0, 87.0, 85.0, 86.0], 'Nonclipped': [903.0, 914.0, 908.0, 958.0, 912.0, 918.0, 963.0, 911.0, 910.0, 915.0]}
+
+
+------------------------------------------------------------------------------
+5/7/18, after changing clipping mechanism in enjoy to use make_env:
+
+python -m baselines.deepq.experiments.atari.enjoy --model-dir ~/amidarClippedDuelingPrioritized/model-49565917/ --env Amidar --dueling
+
+{'Clipped': [1897.0, 1788.0, 1753.0, 1939.0, 1900.0, 1997.0, 1594.0, 1681.0, 1832.0, 1900.0], 'Nonclipped': [1897.0, 1788.0, 1753.0, 1939.0, 1900.0, 1997.0, 1594.0, 1681.0, 1832.0, 1900.0], 'RewardDist': {0.0: 36368, 1.0: 619, 2.0: 260, 3.0: 247, 4.0: 93, 5.0: 105, 6.0: 167, 7.0: 30, 48.0: 276, 49.0: 6, 99.0: 6, 54.0: 1, 51.0: 2}}
+
+
+python -m baselines.deepq.experiments.atari.enjoy --model-dir ~/amidarClippedDuelingPrioritized/model-49565917/ --env Amidar --dueling --clipped
+
+{'RewardDist': {0.0: 32147, 1.0: 1510}, 'Clipped': [179, 107, 181, 102, 104, 189, 188, 167, 108, 185], 'Nonclipped': [1741.0, 1411.0, 1849.0, 1302.0, 1363.0, 1950.0, 2041.0, 1788.0, 1459.0, 2037.0]}
+
+-----------------------------------------------------------------------------------
+KS-test for whether results for (Clipped agent in clipped env and in nonclipped envs) match same test now but with changed clipping mechanism in enjoy:
+
+>>> from scipy.stats import ks_2samp
+>>> ks_2samp([179, 107, 181, 102, 104, 189, 188, 167, 108, 185], [181, 186, 187, 106, 185, 181, 182, 159, 184, 189])
+Ks_2sampResult(statistic=0.39999999999999997, pvalue=0.31285267601695599)
+>>> ks_2samp([1741.0, 1411.0, 1849.0, 1302.0, 1363.0, 1950.0, 2041.0, 1788.0, 1459.0, 2037.0], [1752.0, 1949.0, 1987.0, 1312.0, 1943.0, 1850.0, 1938.0, 1636.0, 1994.0, 2083.0])
+Ks_2sampResult(statistic=0.39999999999999997, pvalue=0.31285267601695599)
+
+Since pvalue is high, probably same distribution so probably everything is fine.

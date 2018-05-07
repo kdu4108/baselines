@@ -150,7 +150,7 @@ class ClippedRewardsWrapper(gym.RewardWrapper):
 
 class LogRewardsWrapper(gym.RewardWrapper):
     def _reward(self, reward):
-        """Change all the positive rewards to 1, negative to -1 and keep zero."""
+        """Shapes the rewards by applying a log function"""
         return np.sign(reward)*np.log(1 + np.absolute(reward))
 
 class AdditiveShiftRewardsWrapper(gym.RewardWrapper):
@@ -170,6 +170,17 @@ class ScaleRewardsWrapper(gym.RewardWrapper):
     def _reward(self, reward):
         """Scale all rewards by self.scale."""
         return (reward * self.scale)
+
+class ClipLargeRewardsWrapper(gym.RewardWrapper):
+    def __init__(self, env = None, threshold = float("inf")):
+        super(ClipLargeRewardsWrapper, self).__init__(env)
+        self.threshold = threshold
+
+    def _reward(self, reward):
+        """Scale all rewards by self.scale."""
+        if reward > self.threshold:
+            return np.sign(reward)
+        return reward
 
 
 class LazyFrames(object):
@@ -241,7 +252,9 @@ class ScaledFloatFrame(gym.ObservationWrapper):
 #     env = FrameStack(env, 4)
 #     env = ClippedRewardsWrapper(env)
 #     return env
-def wrap_dqn(env, clip = False, shift = 0, scale = 1, log = False):
+
+# clip_threshold for amidar appears to be ~48
+def wrap_dqn(env, clip = False, shift = 0, scale = 1, log = False, clip_threshold = float("inf")):
     """Apply a common set of wrappers for Atari games."""
     assert 'NoFrameskip' in env.spec.id
     env = EpisodicLifeEnv(env)
@@ -255,6 +268,8 @@ def wrap_dqn(env, clip = False, shift = 0, scale = 1, log = False):
         env = ClippedRewardsWrapper(env)
     if log:
         env = LogRewardsWrapper(env)
+    if clip_threshold < float("inf"):
+        env = ClipLargeRewardsWrapper(env, clip_threshold)
     env = AdditiveShiftRewardsWrapper(env, shift)
     env = ScaleRewardsWrapper(env, scale)
     return env

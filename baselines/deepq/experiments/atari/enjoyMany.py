@@ -53,7 +53,7 @@ if __name__ == '__main__':
     for i in range(0, len(modelList)):
         tf.reset_default_graph()
         with U.make_session(4) as sess:
-            env = make_env(args.env)
+            env = make_env(args.env, clip_reward = args.clipped)
             act = deepq.build_act(
                 make_obs_ph=lambda name: U.Uint8Input(env.observation_space.shape, name=name),
                 q_func=dueling_model if args.dueling else model,
@@ -63,7 +63,4 @@ if __name__ == '__main__':
             resultsDict[modelList[i]] = trial_rewards
 
     with open('rewardShiftresults.json', 'w') as outfile:
-        json.dump(resultsDict, outfile, indent = 4, sort_keys = True)
-            # with open("results.txt", "a") as text _file:
-            #     # text_file.write("Clipped Agent: " + str(trial_rewards) + "\n")        
-            #     text_file.write("NonClipped Agent: " + str(trial_rewards) + "\n")        
+        json.dump(resultsDict, outfile, indent = 4, sort_keys = True)           

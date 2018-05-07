@@ -66,16 +66,18 @@ def parse_args():
     parser.add_argument("--add-shift", type=int, default=int(0), help="amount by which to shift the reward")
     # Scaling reward (by Kevin Du)
     parser.add_argument("--scale-by", type=float, default=1.0, help="amount by which to scale the reward")
+    # Clipping large reward (by Kevin Du)
+    parser.add_argument("--clip-large", type=float, default=float("inf"), help="threshold at which to start clipping reward")
     # log reward (by Kevin Du, inspired by Hester et al.)
     boolean_flag(parser, "log-reward", default=False, help="whether or not to shape reward by log")
     return parser.parse_args()
 
 
 # def make_env(game_name):
-def make_env(game_name, clip_reward = False, add_shift = 0, scale_by = 1.0, log_reward = False):
+def make_env(game_name, clip_reward = False, add_shift = 0, scale_by = 1.0, log_reward = False, clip_large = float("inf")):
     env = gym.make(game_name + "NoFrameskip-v4")
     monitored_env = SimpleMonitor(env)  # puts rewards and number of steps in info, before environment is wrapped
-    env = wrap_dqn(monitored_env, clip = clip_reward, shift = add_shift, scale = scale_by, log = log_reward)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
+    env = wrap_dqn(monitored_env, clip = clip_reward, shift = add_shift, scale = scale_by, log = log_reward, clip_threshold = clip_large)  # applies a bunch of modification to simplify the observation space (downsample, make b/w)
     return env, monitored_env
 
 
@@ -137,7 +139,12 @@ if __name__ == '__main__':
     else:
         container = None
     # Create and seed the env.
-    env, monitored_env = make_env(args.env, args.clip_reward, args.add_shift, args.scale_by, args.log_reward)
+    env, monitored_env = make_env(args.env, 
+        clip_reward = args.clip_reward, 
+        add_shift = args.add_shift, 
+        scale_by = args.scale_by, 
+        log_reward = args.log_reward, 
+        clip_large = args.clip_large)
     if args.seed > 0:
         set_global_seeds(args.seed)
         env.unwrapped.seed(args.seed)
