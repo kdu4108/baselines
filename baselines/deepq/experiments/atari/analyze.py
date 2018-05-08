@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import json
 def autolabel(rects, ax):
     """
     Attach a text label above each bar displaying its height
@@ -69,3 +69,26 @@ def clippedVsNonClipped(clipped_agent, nonclipped_agent):
     autolabel(rects2)
 
     plt.show()
+
+def rewardVsScale(resultsDict):
+    """
+    Make a bar graph of scales and rewards
+    Input: resultsDict, a dictionary mapping from scales to rewards
+    """
+    fig, ax = plt.subplots()
+    numTrials = len(list(resultsDict.values())[0]["Nonclipped"])
+    x_vals = list(map(lambda filename: filename.split("/")[-2][11:], list(resultsDict.keys())))
+    x_vals = list(map(lambda scale: scale.replace('_', '0.'), x_vals))
+    y_vals = np.mean(list(map(lambda x: x['Nonclipped'], list(resultsDict.values()))), 1)
+    p = plt.bar(x_vals, 
+        y_vals, color='g')
+    ax.set_xlabel('Scale')
+    ax.set_ylabel('Average Reward')
+    ax.set_title('Amidar Average Reward across ' + str(numTrials) + ' Trials using Scaled Reward')
+    autolabel(p, ax)
+    plt.show()
+
+if __name__ == '__main__':
+    with open('/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardScaleResults.json') as handle:
+        resultsDict = json.loads(handle.read())
+    rewardVsScale(resultsDict)
