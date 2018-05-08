@@ -70,6 +70,15 @@ def clippedVsNonClipped(clipped_agent, nonclipped_agent):
 
     plt.show()
 
+def parseTitle(filename):
+    lstFileName = filename.split("/")
+    x = lstFileName[-2].split("model-scale")[1]
+    model_num = int(lstFileName[-1].split("-")[1])
+    if model_num < 47000000:
+        x += "*"
+    x = x.replace('_', '0.')
+    return x
+
 def rewardVsScale(resultsDict):
     """
     Make a bar graph of scales and rewards
@@ -77,12 +86,11 @@ def rewardVsScale(resultsDict):
     """
     fig, ax = plt.subplots()
     numTrials = len(list(resultsDict.values())[0]["Nonclipped"])
-    x_vals = list(map(lambda filename: filename.split("/")[-2][11:], list(resultsDict.keys())))
-    x_vals = list(map(lambda scale: scale.replace('_', '0.'), x_vals))
+    x_vals = list(map(parseTitle, list(resultsDict.keys())))
     y_vals = np.mean(list(map(lambda x: x['Nonclipped'], list(resultsDict.values()))), 1)
     p = plt.bar(x_vals, 
         y_vals, color='g')
-    ax.set_xlabel('Scale')
+    ax.set_xlabel('Scale Factor')
     ax.set_ylabel('Average Reward')
     ax.set_title('Amidar Average Reward across ' + str(numTrials) + ' Trials using Scaled Reward')
     autolabel(p, ax)
