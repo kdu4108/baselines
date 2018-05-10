@@ -15,7 +15,7 @@ from baselines.common.misc_util import (
 )
 from baselines.common.atari_wrappers_deprecated import wrap_dqn
 from baselines.deepq.experiments.atari.model import model, dueling_model
-from baselines.deepq.experiments.atari.enjoy import make_env, play, clip_score
+from baselines.deepq.experiments.atari.enjoy import make_env, play
 
 def parse_args():
     parser = argparse.ArgumentParser("Run an already learned DQN model.")
@@ -31,25 +31,33 @@ def parse_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
-    modelList = ["shift/model-shift10/model-46000000", 
-    "shift/model-shift100/model-34000000",
-    "shift/model-shift1000/model-40000000",
-    "shift/model-shiftNeg10/model-48386183",
-    "shift/model-shiftNeg100/model-39000000",
-    "shift/model-shiftNeg1000/model-39000000"]
+    # modelList = ["shift/model-shift10/model-46000000", 
+    # "shift/model-shift100/model-34000000",
+    # "shift/model-shift1000/model-40000000",
+    # "shift/model-shiftNeg10/model-48386183",
+    # "shift/model-shiftNeg100/model-39000000",
+    # "shift/model-shiftNeg1000/model-39000000"]
 
+    modelList = ["scale/model-scale100/model-47000000",
+    "scale/model-scale10/model-49400276",
+    "scale/model-scale1/model-49457737",
+    "scale/model-scale_1/model-49468207",
+    "scale/model-scale_01/model-49321802",
+    "scale/model-scale_001/model-28000000"]
     modelList = list(map(lambda x: "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/" + x, modelList))
-    videoList = ["shift/model-shift10/", 
-    "shift/model-shift100/",
-    "shift/model-shift1000/",
-    "shift/model-shiftNeg10/",
-    "shift/model-shiftNeg100/",
-    "shift/model-shiftNeg1000/"]
-    videoList = list(map(lambda x: "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/" + x + "video.mp4", videoList))
+    # videoList = ["shift/model-shift10/", 
+    # "shift/model-shift100/",
+    # "shift/model-shift1000/",
+    # "shift/model-shiftNeg10/",
+    # "shift/model-shiftNeg100/",
+    # "shift/model-shiftNeg1000/"]
+    videoList = list(map(lambda x: x[:-14] + "video.mp4", modelList))
+    # videoList = list(map(lambda x: "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/" + x + "video.mp4", videoList))
 
     resultsDict = {}
     args = parse_args()
 
+    # loop through each model and test each model 10 times
     for i in range(0, len(modelList)):
         tf.reset_default_graph()
         with U.make_session(4) as sess:
@@ -62,5 +70,5 @@ if __name__ == '__main__':
             trial_rewards = play(env, act, args.stochastic, videoList[i], args.clipped, num_trials = 10)
             resultsDict[modelList[i]] = trial_rewards
 
-    with open('rewardShiftresults.json', 'w') as outfile:
+    with open('rewardScaleResultsEnjoyMany.json', 'w') as outfile:
         json.dump(resultsDict, outfile, indent = 4, sort_keys = True)           

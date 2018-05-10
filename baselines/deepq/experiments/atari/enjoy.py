@@ -111,7 +111,7 @@ def play(env, act, stochastic, video_path, clipped, num_trials = 10):
             reward = 0
             num_played += 1
             num_episodes = len(info["rewards"])
-    plotRewardDist(rewardFreq, num_trials)
+    # plotRewardDist(rewardFreq, num_trials)
 
     # return dictionary of rewards
     return {"Nonclipped": info["rewards"], "Clipped": rewardArray, "RewardDist": rewardFreq}

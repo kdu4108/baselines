@@ -87,7 +87,9 @@ def rewardVsScale(resultsDict):
     fig, ax = plt.subplots()
     numTrials = len(list(resultsDict.values())[0]["Nonclipped"])
     x_vals = list(map(parseTitle, list(resultsDict.keys())))
+    print("X: " + str(x_vals))
     y_vals = np.mean(list(map(lambda x: x['Nonclipped'], list(resultsDict.values()))), 1)
+    print("Y: " + str(y_vals))
     p = plt.bar(x_vals, 
         y_vals, color='g')
     ax.set_xlabel('Scale Factor')
@@ -97,6 +99,6 @@ def rewardVsScale(resultsDict):
     plt.show()
 
 if __name__ == '__main__':
-    with open('/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardScaleResults.json') as handle:
+    with open('/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardScaleResultsEnjoyMany.json') as handle:
         resultsDict = json.loads(handle.read())
     rewardVsScale(resultsDict)
