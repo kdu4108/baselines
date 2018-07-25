@@ -9,7 +9,7 @@
 #  Can use up to 64GB of memory
 #$ -l vf=64G
 #
-#$ -N logReward
+#$ -N clipLarge
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64:/usr/local/cuda-8.0/extras/CUPTI/lib64"
 export CUDA_HOME=/usr/local/cuda-8.0
 export LIBRARY_PATH=$LIBRARY_PATH:${CUDA_HOME}/lib64 
@@ -22,5 +22,5 @@ cd /research/xai/kdu3/rl/baselines/
 
 # IND=$SGE_TASK_ID
 # mkdir amidarScale_01DuelingPrioritized
-python -m baselines.deepq.experiments.atari.train --env Amidar --dueling --prioritized --save-dir amidarLogRewardDuelingPrioritized --log-reward
+python -m baselines.deepq.experiments.atari.train --env Amidar --dueling --prioritized --save-dir amidarClipLargeDuelingPrioritized --clip-large 40
 # $IND
