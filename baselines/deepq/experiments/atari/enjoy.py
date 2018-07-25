@@ -1,4 +1,5 @@
 import argparse
+import json
 import gym
 import os
 import numpy as np
@@ -111,7 +112,7 @@ def play(env, act, stochastic, video_path, clipped, num_trials = 10):
             reward = 0
             num_played += 1
             num_episodes = len(info["rewards"])
-    plotRewardDist(rewardFreq, num_trials)
+    # plotRewardDist(rewardFreq, num_trials)
 
     # return dictionary of rewards
     return {"Nonclipped": info["rewards"], "Clipped": rewardArray, "RewardDist": rewardFreq}
@@ -129,6 +130,8 @@ if __name__ == '__main__':
         trial_rewards = play(env, act, args.stochastic, args.video, args.clipped)
         print(trial_rewards)
 
+        with open('rewardClip40Result.json', 'w') as outfile:
+            json.dump(trial_rewards, outfile, indent = 4, sort_keys = True)    
         # with open("results.txt", "a") as text_file:
         #     # text_file.write("Clipped Agent: " + str(trial_rewards) + "\n")        
         #     text_file.write("NonClipped Agent: " + str(trial_rewards) + "\n")        

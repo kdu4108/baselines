@@ -1,0 +1,19 @@
+{
+    "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/scale/model-scale10/model-49400276": {
+        "Nonclipped": [673.0, 662.0, 412.0, 465.0, 635.0, 595.0, 597.0, 619.0, 597.0, 715.0], 
+        "Clipped": [673.0, 662.0, 412.0, 465.0, 635.0, 595.0, 597.0, 619.0, 597.0, 715.0]
+    },
+    "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/scale/model-scale100/model-47000000": {
+       "Nonclipped": [507.0, 497.0, 556.0, 557.0, 408.0, 559.0, 408.0, 559.0, 479.0, 560.0], 
+       "Clipped": [507.0, 497.0, 556.0, 557.0, 408.0, 559.0, 408.0, 559.0, 479.0, 560.0] 
+    },
+    "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/scale/model-scale_001/model-28000000": {
+        "Nonclipped": [94.0, 79.0, 34.0, 15.0, 44.0, 15.0, 15.0, 37.0, 36.0, 44.0], 
+        "Clipped": [94.0, 79.0, 34.0, 15.0, 44.0, 15.0, 15.0, 37.0, 36.0, 44.0]
+    },
+    "/home/kevin/Documents/RL/openai/baselines3.4/baselines/rewardexperiments/scale/model-scale1/model-49457737": {
+        "Clipped": [83.0, 86.0, 85.0, 86.0, 87.0, 88.0, 87.0, 87.0, 85.0, 86.0], 
+        "Nonclipped": [903.0, 914.0, 908.0, 958.0, 912.0, 918.0, 963.0, 911.0, 910.0, 915.0]
+    }
+
+}
